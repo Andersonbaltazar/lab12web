@@ -5,8 +5,15 @@ import { prisma } from '@/lib/prisma'
 export async function GET() {
   try {
     const authors = await prisma.author.findMany({
-      include: {
-        books: true,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        bio: true,
+        nationality: true,
+        birthYear: true,
+        createdAt: true,
+        updatedAt: true,
         _count: {
           select: { books: true },
         },

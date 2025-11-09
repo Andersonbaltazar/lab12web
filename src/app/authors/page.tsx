@@ -226,7 +226,7 @@ export default function AuthorsPage() {
                         {author.email}
                       </td>
                       <td style={{ padding: '1rem', color: '#6b7280' }}>
-                        📖 {author._count?.books || 0}
+                        📖 {(author as any)?._count?.books || 0}
                       </td>
                       <td style={{ padding: '1rem', textAlign: 'center' }}>
                         <Link href={`/authors/${author.id}`} style={{
