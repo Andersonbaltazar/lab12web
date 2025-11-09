@@ -39,7 +39,7 @@ interface Book {
 
 export default function AuthorDetailPage() {
   const params = useParams();
-  const authorId = params.id as string;
+  const authorId = Array.isArray(params.id) ? params.id[0] : (params.id as string);
 
   const [author, setAuthor] = useState<Author | null>(null);
   const [stats, setStats] = useState<Stats | null>(null);
