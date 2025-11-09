@@ -1,65 +1,160 @@
-import Image from "next/image";
+'use client'
+
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 export default function Home() {
+  const [stats, setStats] = useState({ authors: 0, books: 0 })
+
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        const authorsRes = await fetch('/api/authors')
+        const booksRes = await fetch('/api/books')
+        const authorsData = await authorsRes.json()
+        const booksData = await booksRes.json()
+        setStats({
+          authors: authorsData.length || 0,
+          books: booksData.length || 0,
+        })
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    loadStats()
+  }, [])
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div style={{ minHeight: '100vh', backgroundColor: '#f8f9fa', padding: '2rem' }}>
+      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        {/* Header */}
+        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '0.5rem', color: '#1f2937' }}>
+            📚 Sistema de Biblioteca
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p style={{ fontSize: '1.1rem', color: '#6b7280' }}>
+            Gestiona autores y libros de forma intuitiva
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Estadísticas */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '3rem' }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '2rem',
+            borderRadius: '12px',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+            textAlign: 'center',
+          }}>
+            <div style={{ fontSize: '3rem', fontWeight: 'bold', color: '#3b82f6' }}>
+              {stats.authors}
+            </div>
+            <p style={{ color: '#6b7280', marginTop: '0.5rem' }}>Autores registrados</p>
+          </div>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '2rem',
+            borderRadius: '12px',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+            textAlign: 'center',
+          }}>
+            <div style={{ fontSize: '3rem', fontWeight: 'bold', color: '#10b981' }}>
+              {stats.books}
+            </div>
+            <p style={{ color: '#6b7280', marginTop: '0.5rem' }}>Libros en la biblioteca</p>
+          </div>
         </div>
-      </main>
+
+        {/* Botones de navegación */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+          {/* Gestionar Autores */}
+          <Link href="/authors" style={{ textDecoration: 'none' }}>
+            <div style={{
+              backgroundColor: 'white',
+              padding: '2rem',
+              borderRadius: '12px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+              border: '2px solid #3b82f6',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)'
+              e.currentTarget.style.transform = 'translateY(-4px)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)'
+              e.currentTarget.style.transform = 'translateY(0)'
+            }}
+            >
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>👤</div>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.5rem' }}>
+                Gestionar Autores
+              </h2>
+              <p style={{ color: '#6b7280', textAlign: 'center' }}>
+                Crear, editar y eliminar autores
+              </p>
+            </div>
+          </Link>
+
+          {/* Gestionar Libros */}
+          <Link href="/books" style={{ textDecoration: 'none' }}>
+            <div style={{
+              backgroundColor: 'white',
+              padding: '2rem',
+              borderRadius: '12px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+              border: '2px solid #10b981',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)'
+              e.currentTarget.style.transform = 'translateY(-4px)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)'
+              e.currentTarget.style.transform = 'translateY(0)'
+            }}
+            >
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📖</div>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '0.5rem' }}>
+                Buscar Libros
+              </h2>
+              <p style={{ color: '#6b7280', textAlign: 'center' }}>
+                Buscar, filtrar y gestionar libros
+              </p>
+            </div>
+          </Link>
+        </div>
+
+        {/* Info de API */}
+        <div style={{
+          marginTop: '3rem',
+          padding: '1.5rem',
+          backgroundColor: '#f0f9ff',
+          borderRadius: '12px',
+          borderLeft: '4px solid #3b82f6',
+        }}>
+          <h3 style={{ fontWeight: 'bold', color: '#1f2937', marginBottom: '0.5rem' }}>
+            ℹ️ Información del Sistema
+          </h3>
+          <p style={{ color: '#6b7280', fontSize: '0.9rem' }}>
+            Este sistema integra una API REST completa con endpoints para gestionar autores y libros. 
+            Todos los datos se sincronizan con Supabase PostgreSQL en tiempo real.
+          </p>
+        </div>
+      </div>
     </div>
-  );
+  )
 }
